@@ -15,11 +15,13 @@ router.post('/', async function (req, res, next) {
     try {
         const { username, email, firstName, lastName, password } = req.body;
         // insert into db
-        // const duplicates = await db.query(`
-        //     SELECT username
-        //     FROM users
-        //     WHERE username = $1`,
-        //     [])
+        const duplicates = await db.query(`
+            SELECT username
+            FROM users
+            WHERE username = $1`,
+            [username]);
+        if (duplicates.rows[0]) res.send('already in there')
+
         res.send(`post user ${username}`)
     } catch (err) {
         return next(err)
