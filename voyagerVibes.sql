@@ -1,17 +1,17 @@
-\echo 'Delete and recreate voyagerVibes db?'
+\echo 'Delete and recreate voyagervibes db?'
 \prompt 'Return for yes or control-C to cancel > ' foo
 
-DROP DATABASE voyagerVibes;
-CREATE DATABASE voyagerVibes;
-\connect voyagerVibes
+DROP DATABASE voyagervibes;
+CREATE DATABASE voyagervibes;
+\connect voyagervibes
 
 \i voyagerVibes-schema.sql
 
-\echo 'Delete and recreate voyagerVibes_test db?'
+\echo 'Delete and recreate voyagervibes_test db?'
 \prompt 'Return for yes or control-C to cancel > ' foo
 
-DROP DATABASE voyagerVibes_test;
-CREATE DATABASE voyagerVibes_test;
-\connect voyagerVibes_test
+DROP DATABASE voyagervibes_test;
+CREATE DATABASE voyagervibes_test;
+\connect voyagervibes_test
 
 \i voyagerVibes-schema.sql

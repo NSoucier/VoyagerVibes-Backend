@@ -5,4 +5,6 @@ using express
 
 
 To initialize db:
-psql < voyagerVibes.sql
+psql < voyagervibes.sql
+
+To run: npm start
