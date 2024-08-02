@@ -7,7 +7,7 @@ const express = require('express');
 
 const router = express.Router();
 
-// get user details
+// get users trips details
 router.get('/', async function (req, res, next) {
     try {
         res.send('retrieving trip')
