@@ -75,6 +75,7 @@ router.patch('/', async function (req, res, next) {
     try {
         const { username, email, firstName, lastName } = req.body;
 
+        // updates user columns in db 
         const result = await db.query(
             `UPDATE users
             SET email = $1, first_name = $2, last_name = $3
@@ -95,6 +96,8 @@ router.patch('/', async function (req, res, next) {
 router.post('/login', async function (req, res, next) {
     try {
         const { username, password } = req.body;
+
+        // hashes password
         const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
         const result = await db.query(

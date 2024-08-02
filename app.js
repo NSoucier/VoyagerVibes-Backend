@@ -1,6 +1,6 @@
 "use strict"
 
-// Express backend app for Voyager Vibes
+// Express backend API for Voyager Vibes
 
 const express = require('express');
 const cors = require('cors');
