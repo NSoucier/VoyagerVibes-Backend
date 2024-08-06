@@ -129,10 +129,11 @@ router.post('/:username/trips', async function (req, res, next) {
     try {
         const { username } = req.params;
         const { destination, duration, itinerary } = req.body;
+        console.log(req.params.username, req.body)
 
         // insert trip details into db
         const result = await db.query(
-            `INSERT INTO trips
+            `INSERT INTO mytrips
              (username, destination, duration, itinerary)
              VALUES ($1, $2, $3, $4)
              RETURNING username`,
