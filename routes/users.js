@@ -124,14 +124,27 @@ router.post('/login', async function (req, res, next) {
     }
 });
 
+// add trip itinerary to user profile
+router.post('/:username/trips', async function (req, res, next) {
+    try {
+        const { username } = req.params;
+        const { destination, duration, itinerary } = req.body;
 
+        // insert trip details into db
+        const result = await db.query(
+            `INSERT INTO trips
+             (username, destination, duration, itinerary)
+             VALUES ($1, $2, $3, $4)
+             RETURNING username`,
+          [username, destination, duration, itinerary],
+        );
 
+        const user = result.rows[0];
 
-// router.get('/', async function (req, res, next) {
-//     try {
-//     } catch (err) {
-//         return next(err)
-//     }
-// });
+        res.send(user)
+    } catch (err) {
+        return next(err)
+    }
+});
 
 module.exports = router;
