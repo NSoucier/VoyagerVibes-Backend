@@ -148,4 +148,21 @@ router.post('/:username/trips', async function (req, res, next) {
     }
 });
 
+// get all trips associated with user profile 
+router.get('/:username/trips', async function (req, res, next) {
+    try {
+        const { username } = req.params;
+
+        const result = await db.query(
+            `SELECT * FROM mytrips
+            WHERE username = $1`,
+            [username]
+        );
+        console.log('backend', result.rows)
+        res.send(result.rows);
+    } catch (err) {
+        return next(err)
+    }
+})
+
 module.exports = router;
