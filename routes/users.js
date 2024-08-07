@@ -164,6 +164,21 @@ router.get('/:username/trips', async function (req, res, next) {
     } catch (err) {
         return next(err)
     }
-})
+});
 
+// delete trip itinerary from user profile 
+router.get('/trips/:tripID', async function (req, res, next) {
+    try {
+        const { tripID } = req.params;
+
+        const result = await db.query(
+            `DELETE FROM myTrips
+            WHERE id = $1`,
+            [tripID]
+        );
+        res.send('deleted');
+    } catch (err) {
+        return next(err)
+    }
+});
 module.exports = router;
