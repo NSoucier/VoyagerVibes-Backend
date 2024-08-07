@@ -57,7 +57,7 @@ router.get('/:username', async function (req, res, next) {
     try {
         // retrieves users profile
         const result = await db.query(
-            `SELECT email, first_name AS "firstName", last_name AS "lastName" FROM users
+            `SELECT email, first_name AS "firstName", last_name AS "lastName", picture FROM users
             WHERE username = $1`,
             [req.params.username]
         );
@@ -73,15 +73,15 @@ router.get('/:username', async function (req, res, next) {
 // update user details
 router.patch('/', async function (req, res, next) {
     try {
-        const { username, email, firstName, lastName } = req.body;
+        const { username, email, firstName, lastName, picture } = req.body;
 
         // updates user columns in db 
         const result = await db.query(
             `UPDATE users
-            SET email = $1, first_name = $2, last_name = $3
-            WHERE username = $4
+            SET email = $1, first_name = $2, last_name = $3, picture = $4
+            WHERE username = $5
             RETURNING username`,
-            [email, firstName, lastName, username]
+            [email, firstName, lastName, picture, username]
         );
 
         const user = result.rows[0];
