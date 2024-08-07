@@ -155,7 +155,8 @@ router.get('/:username/trips', async function (req, res, next) {
 
         const result = await db.query(
             `SELECT * FROM mytrips
-            WHERE username = $1`,
+            WHERE username = $1
+            ORDER BY destination`,
             [username]
         );
         console.log('backend', result.rows)
