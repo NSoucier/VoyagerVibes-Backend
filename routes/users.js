@@ -15,16 +15,17 @@ const router = express.Router();
 router.post('/', async function (req, res, next) {
     try {
         const { username, email, firstName, lastName, password } = req.body;
-
+        // console.log('~~~~~~~~~~~~~~~~~', req.body)
         // check if username is already taken
         const duplicates = await db.query(`
             SELECT username
             FROM users
             WHERE username = $1`,
             [username]);
+        // console.log('~~~~~~~~d~~~~~~~~~', duplicates)
         if (duplicates.rows[0]) {
             // throw new ExpressError(`Duplicate username: ${username}`, 401)
-            return res.send('Username already taken.')
+            return res.status(400).send('Username already taken.')
         } 
 
         // hash password before storing in db
@@ -42,6 +43,7 @@ router.post('/', async function (req, res, next) {
             lastName,
             hashedPassword],
         );
+        // console.log('~~~~~~~~r~~~~~~~~~', result)
 
         const user = result.rows[0];
 
@@ -53,7 +55,6 @@ router.post('/', async function (req, res, next) {
 
 // get user details
 router.get('/:username', async function (req, res, next) {
-    console.log('~~~~~~~~~~~~4~~~~~~~~~~~~~~', req.params)
     try {
         // retrieves users profile
         const result = await db.query(
@@ -63,7 +64,10 @@ router.get('/:username', async function (req, res, next) {
         );
 
         const user = result.rows[0];
-        console.log('-----------------------', user)
+
+        if (!user) res.status(404).send('User does not exist.')
+
+        // console.log('-----------------------', result, user, req.params.username)
         res.send(user)
     } catch (err) {
         return next(err)
@@ -71,7 +75,8 @@ router.get('/:username', async function (req, res, next) {
 });
 
 // update user details
-router.patch('/', async function (req, res, next) {
+router.patch('/:username', async function (req, res, next) {
+    console.log('made it')
     try {
         const { username, email, firstName, lastName, picture } = req.body;
 

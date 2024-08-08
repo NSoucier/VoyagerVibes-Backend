@@ -6,7 +6,7 @@ const express = require('express');
 const cors = require('cors');
 
 const usersRoutes = require('./routes/users');
-const tripsRoutes = require('./routes/trips');
+// const tripsRoutes = require('./routes/trips');
 const ExpressError = require('./expressError');
 
 const app = express();
@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/users', usersRoutes);
-app.use('/trips', tripsRoutes);
+// app.use('/trips', tripsRoutes);
 
 /** Generic error handler; */
 app.use(function (err, req, res, next) {

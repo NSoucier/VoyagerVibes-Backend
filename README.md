@@ -1,7 +1,8 @@
 # VoyagerVibes-Backend
 
 using express
-
+test using supertest
+npm test to test
 
 
 To initialize db:
