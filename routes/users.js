@@ -91,6 +91,9 @@ router.patch('/:username', async function (req, res, next) {
 
         const user = result.rows[0];
 
+        if (!user) res.status(404).send(`${username} not found.`)
+
+        console.log(user, '~~~~~~~~~~~~~~~~~~~~~~', result.rows, req.body )
         res.send(user)
     } catch (err) {
         return next(err)
