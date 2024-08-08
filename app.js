@@ -16,6 +16,11 @@ app.use(express.json());
 app.use('/users', usersRoutes);
 // app.use('/trips', tripsRoutes);
 
+/** Handle 404 */
+app.use(function (req, res, next) {
+  return res.status(404).json({error: "404 - page not found."})
+})
+
 /** Generic error handler; */
 app.use(function (err, req, res, next) {
     if (process.env.NODE_ENV !== "test") console.error(err.stack);

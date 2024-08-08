@@ -103,7 +103,7 @@ describe("GET /users/:username", function () {
     });
   });
 
-  test("Error 404 for user that does not exist", async function () {
+  test("error 404 for user that does not exist", async function () {
     const resp = await request(app)
         .get("/users/user99")
     expect(resp.statusCode).toEqual(404);
@@ -142,92 +142,113 @@ describe("PATCH /users/:username", () => {
   });
 });
 
-// /************************************** DELETE /users/:username */
+/************************************** POST /users/login */
 
-// describe("DELETE /users/:username", function () {
-//   test("works for admin", async function () {
-//     const resp = await request(app)
-//         .delete(`/users/u1`)
-//         .set("authorization", `Bearer ${adminToken}`);
-//     expect(resp.body).toEqual({ deleted: "u1" });
-//   });
+describe("POST /users/login", () => {
+    test("can successfully login", async function () {
+        const resp = await request(app)
+          .post(`/users/login`)
+          .send({
+              username: "user0",
+              password: "password0"
+        });
+        expect(resp.statusCode).toEqual(200);
+        expect(resp.body).toEqual({ username: "user0" });
+    });
+  
+    test("unsuccessfully login for user that does not exist", async function () {
+        const resp = await request(app)
+          .post(`/users/login`)
+          .send({
+              username: "user0000",
+              password: "password0"
+        });
+        expect(resp.statusCode).toEqual(400);
+        expect(resp.res.text).toEqual("Invalid login credentials.");
+    });
 
-//   test("works for same user", async function () {
-//     const resp = await request(app)
-//         .delete(`/users/u1`)
-//         .set("authorization", `Bearer ${u1Token}`);
-//     expect(resp.body).toEqual({ deleted: "u1" });
-//   });
+    test("unsuccessfully login for user with incorrect password", async function () {
+        const resp = await request(app)
+          .post(`/users/login`)
+          .send({
+              username: "user0",
+              password: "Password0"
+        });
+        expect(resp.statusCode).toEqual(400);
+        expect(resp.res.text).toEqual("Invalid login credentials.");
+    });    
+});
 
-//   test("unauth if not same user", async function () {
-//     const resp = await request(app)
-//         .delete(`/users/u1`)
-//         .set("authorization", `Bearer ${u2Token}`);
-//     expect(resp.statusCode).toEqual(401);
-//   });
+/************************************** POST /users/:username/trips */
 
-//   test("unauth for anon", async function () {
-//     const resp = await request(app)
-//         .delete(`/users/u1`);
-//     expect(resp.statusCode).toEqual(401);
-//   });
+describe("POST /users/:username/trips", () => {
+    test("add trip itinerary to user profile", async function () {
+      const resp = await request(app)
+          .post(`/users/user0/trips`)
+          .send({
+              destination: "Mexico",
+              duration: "5",
+              itinerary: "have fun"
+          });
+      expect(resp.statusCode).toEqual(200);
+      expect(resp.body).toEqual({ username: "user0" });
+    });
+  });
 
-//   test("not found if user missing", async function () {
-//     const resp = await request(app)
-//         .delete(`/users/nope`)
-//         .set("authorization", `Bearer ${adminToken}`);
-//     expect(resp.statusCode).toEqual(404);
-//   });
-// });
+/************************************** GET /users/:username/trips */
 
-// /************************************** POST /users/:username/jobs/:id */
+describe("GET /users/:username/trips", () => {
+    test("get all trip itineraries for user profile", async function () {
+        const resp = await request(app)
+          .post(`/users/user0/trips`)
+          .send({
+              destination: "Mexico",
+              duration: "5",
+              itinerary: "have fun"
+        });
+        const resp2 = await request(app)
+        .post(`/users/user0/trips`)
+        .send({
+            destination: "Italy",
+            duration: "9",
+            itinerary: "eat pizza"
+        });
+        const result = await request(app).get('/users/user0/trips');
+        delete result.body[0].id;
+        delete result.body[1].id;
+        expect(result.statusCode).toEqual(200);
+        expect(result.body).toEqual([{
+            destination: "Italy",
+            duration: 9,
+            itinerary: "eat pizza",
+            username: "user0"
+            }, {
+            destination: "Mexico",
+            duration: 5,
+            itinerary: "have fun",
+            username: "user0"
+            }
+        ]);
+    });
+});  
 
-// describe("POST /users/:username/jobs/:id", function () {
-//   test("works for admin", async function () {
-//     const resp = await request(app)
-//         .post(`/users/u1/jobs/${testJobIds[1]}`)
-//         .set("authorization", `Bearer ${adminToken}`);
-//     expect(resp.body).toEqual({ applied: testJobIds[1] });
-//   });
+/************************************** DELETE /users/trips/:tripID */
 
-//   test("works for same user", async function () {
-//     const resp = await request(app)
-//         .post(`/users/u1/jobs/${testJobIds[1]}`)
-//         .set("authorization", `Bearer ${u1Token}`);
-//     expect(resp.body).toEqual({ applied: testJobIds[1] });
-//   });
+describe("DELETE /users/trips/:tripID", () => {
+    test("remove trip itinerary from profile", async function () {
+        const resp = await request(app)
+          .post(`/users/user0/trips`)
+          .send({
+              destination: "Mexico",
+              duration: "5",
+              itinerary: "have fun"
+        });
+        const resp2 = await request(app).get('/users/user0/trips');
+        let tripID = resp2.body[0].id;
 
-//   test("unauth for others", async function () {
-//     const resp = await request(app)
-//         .post(`/users/u1/jobs/${testJobIds[1]}`)
-//         .set("authorization", `Bearer ${u2Token}`);
-//     expect(resp.statusCode).toEqual(401);
-//   });
-
-//   test("unauth for anon", async function () {
-//     const resp = await request(app)
-//         .post(`/users/u1/jobs/${testJobIds[1]}`);
-//     expect(resp.statusCode).toEqual(401);
-//   });
-
-//   test("not found for no such username", async function () {
-//     const resp = await request(app)
-//         .post(`/users/nope/jobs/${testJobIds[1]}`)
-//         .set("authorization", `Bearer ${adminToken}`);
-//     expect(resp.statusCode).toEqual(404);
-//   });
-
-//   test("not found for no such job", async function () {
-//     const resp = await request(app)
-//         .post(`/users/u1/jobs/0`)
-//         .set("authorization", `Bearer ${adminToken}`);
-//     expect(resp.statusCode).toEqual(404);
-//   });
-
-//   test("bad request invalid job id", async function () {
-//     const resp = await request(app)
-//         .post(`/users/u1/jobs/0`)
-//         .set("authorization", `Bearer ${adminToken}`);
-//     expect(resp.statusCode).toEqual(404);
-//   });
-// });
+        const result = await request(app)
+            .delete(`/users/trips/${tripID}`)
+        expect(result.statusCode).toEqual(200);
+        expect(result.res.text).toEqual('deleted');
+    });
+});

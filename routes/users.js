@@ -115,7 +115,7 @@ router.post('/login', async function (req, res, next) {
         );
 
         const user = result.rows[0];
-        console.log('////////////////////////////////', user)
+        // console.log('////////////////////////////////', user)
 
         // if username is in db, check against hashed password
         if (user) {
@@ -126,7 +126,7 @@ router.post('/login', async function (req, res, next) {
             }
         }
 
-        res.send('Invalid login credentials.')
+        res.status(400).send('Invalid login credentials.')
     } catch (err) {
         return next(err)
     }
@@ -167,7 +167,7 @@ router.get('/:username/trips', async function (req, res, next) {
             ORDER BY destination`,
             [username]
         );
-        console.log('backend', result.rows)
+        // console.log('backend', result.rows)
         res.send(result.rows);
     } catch (err) {
         return next(err)
@@ -175,7 +175,8 @@ router.get('/:username/trips', async function (req, res, next) {
 });
 
 // delete trip itinerary from user profile 
-router.get('/trips/:tripID', async function (req, res, next) {
+router.delete('/trips/:tripID', async function (req, res, next) {
+    // console.log('deletingggggggggggggggggggggggg')
     try {
         const { tripID } = req.params;
 
