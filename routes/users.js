@@ -15,14 +15,12 @@ const router = express.Router();
 router.post('/', async function (req, res, next) {
     try {
         const { username, email, firstName, lastName, password } = req.body;
-        // console.log('~~~~~~~~~~~~~~~~~', req.body)
         // check if username is already taken
         const duplicates = await db.query(`
             SELECT username
             FROM users
             WHERE username = $1`,
             [username]);
-        // console.log('~~~~~~~~d~~~~~~~~~', duplicates)
         if (duplicates.rows[0]) {
             // throw new ExpressError(`Duplicate username: ${username}`, 401)
             return res.status(400).send('Username already taken.')
@@ -43,7 +41,6 @@ router.post('/', async function (req, res, next) {
             lastName,
             hashedPassword],
         );
-        // console.log('~~~~~~~~r~~~~~~~~~', result)
 
         const user = result.rows[0];
 
@@ -67,7 +64,6 @@ router.get('/:username', async function (req, res, next) {
 
         if (!user) res.status(404).send('User does not exist.')
 
-        // console.log('-----------------------', result, user, req.params.username)
         res.send(user)
     } catch (err) {
         return next(err)
@@ -76,7 +72,6 @@ router.get('/:username', async function (req, res, next) {
 
 // update user details
 router.patch('/:username', async function (req, res, next) {
-    console.log('made it')
     try {
         const { username, email, firstName, lastName, picture } = req.body;
 
@@ -93,7 +88,6 @@ router.patch('/:username', async function (req, res, next) {
 
         if (!user) res.status(404).send(`${username} not found.`)
 
-        console.log(user, '~~~~~~~~~~~~~~~~~~~~~~', result.rows, req.body )
         res.send(user)
     } catch (err) {
         return next(err)
@@ -115,7 +109,6 @@ router.post('/login', async function (req, res, next) {
         );
 
         const user = result.rows[0];
-        // console.log('////////////////////////////////', user)
 
         // if username is in db, check against hashed password
         if (user) {
@@ -137,7 +130,6 @@ router.post('/:username/trips', async function (req, res, next) {
     try {
         const { username } = req.params;
         const { destination, duration, itinerary } = req.body;
-        console.log(req.params.username, req.body)
 
         // insert trip details into db
         const result = await db.query(
@@ -167,7 +159,6 @@ router.get('/:username/trips', async function (req, res, next) {
             ORDER BY destination`,
             [username]
         );
-        // console.log('backend', result.rows)
         res.send(result.rows);
     } catch (err) {
         return next(err)
@@ -176,7 +167,6 @@ router.get('/:username/trips', async function (req, res, next) {
 
 // delete trip itinerary from user profile 
 router.delete('/trips/:tripID', async function (req, res, next) {
-    // console.log('deletingggggggggggggggggggggggg')
     try {
         const { tripID } = req.params;
 
