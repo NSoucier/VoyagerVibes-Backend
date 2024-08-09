@@ -6,15 +6,12 @@ const express = require('express');
 const cors = require('cors');
 
 const usersRoutes = require('./routes/users');
-// const tripsRoutes = require('./routes/trips');
-const ExpressError = require('./expressError');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use('/users', usersRoutes);
-// app.use('/trips', tripsRoutes);
 
 /** Handle 404 */
 app.use(function (req, res, next) {
@@ -33,16 +30,3 @@ app.use(function (err, req, res, next) {
   });
 
 module.exports = app;
-
-// app.get('/', (req, res, next) => {
-//     try {
-//         res.send('heyo runner up')
-//     } catch (err) {
-//         next(err)
-//     }
-// })
-
-// app.listen(8080, () => {
-//     console.log('Server running on port 8080')
-// })
-

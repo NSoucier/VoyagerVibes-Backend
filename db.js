@@ -1,5 +1,7 @@
 "use strict";
+
 /** Database setup for voyagervibes. */
+
 const { Client } = require("pg");
 const { getDatabaseUri } = require("./config");
 

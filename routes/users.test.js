@@ -4,21 +4,8 @@ const request = require("supertest");
 
 const db = require("../db.js");
 const app = require("../app");
-// const User = require("../models/user");
 const pictureURL = 'https://static.vecteezy.com/system/resources/previews/004/204/251/large_2x/men-travelgraphy-on-the-mountain-tourist-on-summer-holiday-vacation-landscape-beautiful-mountain-on-sea-at-samet-nangshe-viewpoint-phang-nga-bay-travel-thailand-travel-adventure-nature-free-photo.jpg';
 
-// const {
-//   commonBeforeAll,
-//   commonBeforeEach,
-//   commonAfterEach,
-//   commonAfterAll,
-//   testJobIds,
-//   u1Token,
-//   u2Token,
-//   adminToken,
-// } = require("./_testCommon");
-
-// beforeAll(commonBeforeAll);
 beforeEach(async () => {
     db.query('DELETE FROM users');
     await request(app)
@@ -32,7 +19,9 @@ beforeEach(async () => {
         });
     }
 );
+
 afterEach(() => (db.query('ROLLBACK')));
+
 afterAll(() => (db.end()));
 
 /************************************** POST /users */
@@ -49,7 +38,6 @@ describe("POST /users", function () {
           email: "user1@email.com"
         });
     expect(resp.statusCode).toEqual(200);
-    // console.log('------------', resp)
     expect(resp.body).toEqual({ username: "user1" });
   });
 
@@ -73,7 +61,6 @@ describe("POST /users", function () {
           password: "password2",
           email: "user1@email.com"
         });    
-    // console.log('------------', resp)
     expect(resp2.statusCode).toEqual(400);
     expect(resp2.res.text).toEqual('Username already taken.');
   });

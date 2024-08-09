@@ -5,10 +5,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const db = require('../db.js');
-// const User = require('../models/user'); // todo
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
-const ExpressError = require('../expressError.js');
-
 const router = express.Router();
 
 // register new user
@@ -22,7 +19,6 @@ router.post('/', async function (req, res, next) {
             WHERE username = $1`,
             [username]);
         if (duplicates.rows[0]) {
-            // throw new ExpressError(`Duplicate username: ${username}`, 401)
             return res.status(400).send('Username already taken.')
         } 
 
@@ -62,7 +58,7 @@ router.get('/:username', async function (req, res, next) {
 
         const user = result.rows[0];
 
-        if (!user) res.status(404).send('User does not exist.')
+        if (!user) res.status(404).send('User not found.')
 
         res.send(user)
     } catch (err) {
@@ -180,6 +176,5 @@ router.delete('/trips/:tripID', async function (req, res, next) {
         return next(err)
     }
 });
-
 
 module.exports = router;
