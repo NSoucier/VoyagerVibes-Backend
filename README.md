@@ -1,7 +1,7 @@
 # Voyager Vibes (Backend)
 
 ## DEPLOYED AT
-Visit Voyager Vibes at: ______________________________________________________________________
+Visit Voyager Vibes at: https://voyagervibes.onrender.com
 
 ## GOAL OF APPLICATION
 Have you ever found yourself spending countless hours online browsing a multitude of blogs and pinterest posts for the best activities to schedule on your upcoming vacation? Cut that time down to a fraction with your new best travel buddy - Voyager Vibes. The goal of this app is to reduce time spent sifting through countless websites by providing you with the perfect travel itinerary, tailored to your own personal preferences. You input your destination, trip length and your ideal type of activities and Voyager Vibes will give you a perfect itinerary. The app will also let you register your own account and keep track of your favorite itineraries for future use and past itineraries for sharing on social media.
@@ -21,7 +21,7 @@ https://ai.google.dev/
 
 ## SETUP
 To get this application running, make sure you do the following:
-1. Get frontend: ________________________________________________________________________________
+1. Get frontend: https://github.com/NSoucier/VoyagerVibes-Frontend
 2. Create database: *createdb voyagervibes*
 3. Run: *psql < voyagervibes.sql*
 4. Install dependencies: *npm i*
