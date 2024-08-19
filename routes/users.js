@@ -4,16 +4,26 @@
 
 const express = require('express');
 const bcrypt = require('bcrypt');
+const jsonschema = require('jsonschema');
 const db = require('../db.js');
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
 const router = express.Router();
+const newUserSchema = require('../schemas/userRegister.json');
 
 // register new user
 router.post('/', async function (req, res, next) {
     try {
+        // validate format of inputs first
+        const validator = jsonschema.validate(req.body, newUserSchema);
+        if (!validator.valid) {
+          const errs = validator.errors.map(e => e.stack);
+          let msg = errs.join().replaceAll('instance.', ' ');
+          return res.status(400).send('Invalid: ' + msg)
+        }        
+
         const { username, email, firstName, lastName, password } = req.body;
         // check if username is already taken
-        const duplicates = await db.query(`
+        let duplicates = await db.query(`
             SELECT username
             FROM users
             WHERE username = $1`,
@@ -21,6 +31,16 @@ router.post('/', async function (req, res, next) {
         if (duplicates.rows[0]) {
             return res.status(400).send('Username already taken.')
         } 
+
+        // check if email is already taken
+        duplicates = await db.query(`
+            SELECT email
+            FROM users
+            WHERE email = $1`,
+            [email]);
+        if (duplicates.rows[0]) {
+            return res.status(400).send('Email already taken.')
+        }         
 
         // hash password before storing in db
         const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
